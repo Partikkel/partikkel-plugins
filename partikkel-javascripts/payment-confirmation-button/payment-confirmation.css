@@ -8,6 +8,7 @@
 .partikkel-floating {
     width: 50px;
     height: 80px;
+    line-height: 100%;
     z-index: 1;
     border-color: rgba(0, 0, 0, 0.0980392);
     border-style: solid;
