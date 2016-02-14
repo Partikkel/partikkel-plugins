@@ -1,0 +1,2 @@
+
+Notice: Undefined variable: if_shortcode_filter_prefix in /var/www/wordpress/wp-content/plugins/partikkel/partikkel.php on line 14
