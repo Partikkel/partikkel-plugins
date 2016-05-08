@@ -1,0 +1,16 @@
+.box_partikkel_buy {
+  background-color: #F6F6F6;
+  background-image: url('../../images/logo-gray.svg');
+  background-position: 0 0, center;
+  background-repeat: no-repeat;
+  font-weight: 500;
+  border-radius: 5px;
+  padding-left: 80px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  width: 210px;
+}
+
+.clearUnderline {
+  text-decoration: none;
+}
