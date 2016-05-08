@@ -1,0 +1,57 @@
+<?php
+require_once 'includes/vendor/autoload.php';
+use \Firebase\JWT\JWT;
+
+/**
+* Implements of hook_init().
+*/
+function partikkel_init() {
+	$node = menu_get_object();
+	if ( empty($node) ) {
+		return;
+	}
+	price_check($node->nid);
+	if(!empty($_GET["partikkel"])){
+		 checkTicketAndMarkPagePaid($_GET["partikkel"],$node->nid);
+		 stripReqParamAndRedirectToSame();
+	}
+}
+
+function stripReqParamAndRedirectToSame(){
+	unset($_GET['partikkel']); // delete partikkel-parameter for aa bevare clean urls
+	$options = array('query' => $_GET);
+	drupal_goto(current_path(),$options);
+}
+
+function checkTicketAndMarkPagePaid($ticket,$nid)
+{
+	$jwt = base64_decode($ticket);
+	$public_key_file = file_get_contents(drupal_get_path('module', 'partikkel').'/public.pem');
+	$public_key = openssl_pkey_get_public($public_key_file);
+	try{
+		$decoded = JWT::decode($jwt, $public_key, array('RS256'));//verify ticket
+		$parsed = drupal_parse_url($decoded->url)['path'];
+		drupal_set_message($parsed.'  '.request_path());
+		if (!strpos($parsed, request_path()) !== false)//verify valid for path
+			return;
+	}
+	catch (Exception $e) {
+	    watchdog('partikkel', 'failed decoding ticket: ' . $e->getMessage());
+	}
+	if(!empty($decoded)){
+		$_SESSION['paid-'.$nid] = 1;
+	}
+}
+
+function price_check($nid) {
+	$checked= !empty( $_SESSION['checked'.$nid] ) ? $_SESSION['checked'.$nid] : false;
+	if(!$checked){
+		$protocol = stripos($_SERVER['SERVER_PROTOCOL'],'https') === true ? 'https://' : 'http://';
+		$currenturl=$protocol . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+		$queryurl='https://test.partikkel.io/api/open/article/url?url='.$currenturl;
+		$json = file_get_contents($queryurl);
+		$data = json_decode($json);
+		$price = $data->{'price'};
+		$_SESSION['checked-'.$nid] = $price;
+	}
+}
