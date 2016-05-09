@@ -15,13 +15,16 @@ add_action('init','register_session');
 add_action('wp','peekTicket');
 add_filter($if_shortcode_filter_prefix.'paid','partikkel_evaluator');
 add_shortcode( 'price', 'price_shortcode' );
-
+add_shortcode( 'buybutton', 'buybutton_shortcode' );
 /**
  * Partikkel enqueue scripts and styles.
  */
 function enqueuePartikkelStyleAndScript() {
     wp_enqueue_style( 'partikkel-button-style', 'https://www.partikkel.io/external/buttons/payment-confirmation.css' );
+    wp_enqueue_style( 'partikkel-buy-button-style', 'https://www.partikkel.io/external/buttons/partikkel_buy_button.css' );
+
     wp_enqueue_script( 'partikkel-script','https://www.partikkel.io/external/buttons/payment-confirmation.js' , array(), '1.0.0', true );
+    wp_enqueue_script( 'partikkel-buy-button','https://www.partikkel.io/external/buttons/partikkel_buy_button.js' , array(), '1.0.0', true );
 }
 add_action( 'wp_enqueue_scripts', 'enqueuePartikkelStyleAndScript' );
 
@@ -34,7 +37,7 @@ function peekTicket(){
  checkTicket($_GET["partikkel"]);
  wp_redirect(esc_url( remove_query_arg( 'partikkel' ) ));
  exit;
-}
+} 
 }
 
 function partikkel_evaluator($value)
@@ -71,4 +74,10 @@ function price_shortcode( $atts, $content = null ) {
 	}
 	return $_SESSION['checked'.get_the_ID()];
 }
+
+function buybutton_shortcode( $atts, $content = null ) {
+	return '<iframe id="purchased-check" width="0" height="0"></iframe><div id="partikkel-button-wrapper"/>';
+}
+
+
 ?>
