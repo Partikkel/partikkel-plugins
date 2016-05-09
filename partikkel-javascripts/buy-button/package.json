@@ -22,6 +22,7 @@
     "run-sequence": "^1.0.2"
   },
   "dependencies": {
+    "domready": "^1.0.8",
     "spin.js": "^2.0.2"
   }
 }
