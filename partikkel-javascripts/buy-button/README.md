@@ -14,4 +14,4 @@ Script og css er også tilgjengelig her: https://www.partikkel.io/external/butto
 ## Bygging av script
 * `npm install`
 * `gulp`
-* Javascript og css skal ligge klarti dist-folder. NB! Miljøspesifikk bygging er ikke på plass, så output er hardkodet med testmiljø-adresser.
+* Javascript og css skal nå ligge klart i dist-folder. NB! Miljøspesifikk bygging er ikke på plass, så output er hardkodet med testmiljø-adresser.
