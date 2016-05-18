@@ -4,8 +4,10 @@
   background-image: url('../../images/logo-gray.svg');
   background-position: 0 0, center;
   background-repeat: no-repeat;
-  font-weight: 500;
-  font-size: 20px;
+  background-size: 60px 60px;
+  font-size: 18px;
+  font-family: "Roboto", helvetica, arial, sans-serif;
+  font-weight: 400;
   border-radius: 5px;
   padding-left: 75px;
   padding-top: 10px;
@@ -15,5 +17,23 @@
 
 .clearUnderline {
   text-decoration: none;
-  color: gray;
+  color: grey;
+  display: block;
+  height: 24px;
+}
+
+.clearUnderline:hover {
+  text-decoration: none;
+  color: #4aa498;
+}
+
+@media screen and (max-width: 600px) {
+  .box-partikkel-buy {
+    background-size: 40px 40px;
+    font-size: 16px;
+    padding-left: 50px;
+    padding-top: 8px;
+    height: 34px;
+    width: 100px;
+  }
 }
