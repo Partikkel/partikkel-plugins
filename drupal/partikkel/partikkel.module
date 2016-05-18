@@ -31,7 +31,7 @@ function checkTicketAndMarkPagePaid($ticket,$nid)
 	try{
 		$decoded = JWT::decode($jwt, $public_key, array('RS256'));//verify ticket
 		$parsed = drupal_parse_url($decoded->url)['path'];
-		drupal_set_message($parsed.'  '.request_path());
+		//drupal_set_message($parsed.'  '.request_path());
 		if (!strpos($parsed, request_path()) !== false)//verify valid for path
 			return;
 	}
