@@ -475,6 +475,7 @@ var Utils = {
 
             if(purchasedIFrame) {
                 purchasedIFrame.src = checkUrl;
+                purchasedIFrame.style.visibility = 'hidden';
             }
         }
     },
