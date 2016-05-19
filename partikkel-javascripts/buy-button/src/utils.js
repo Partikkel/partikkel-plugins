@@ -27,12 +27,12 @@ var Utils = {
         }
         var partikkelDiv = document.getElementById('partikkel-button-wrapper');
         var purchasedIFrame = document.getElementById('purchased-check');
-        var returnUrl = (partikkelDiv.dataset && partikkelDiv.dataset.url) ? partikkelDiv.dataset.url : window.location;
+        var returnUrl = (partikkelDiv && partikkelDiv.dataset && partikkelDiv.dataset.url) ? partikkelDiv.dataset.url : window.location;
         var buyUrl = 'https://test.partikkel.io/particket/access/?url=' + returnUrl;
         var checkUrl = 'https://test.partikkel.io/particket/checkaccess/?url=' + returnUrl;
         
         if(partikkelDiv) {        	
-        	var html = '<div id="partikkel_buy_button" class="box-partikkel-buy"><a href="' + buyUrl + '" class="clearUnderline"></a></div>';      
+        	var html = '<a id="partikkel_buy_button" class="partikkel_buy_button" href="' + buyUrl + '" />';  
             partikkelDiv.innerHTML = html;
 
             var spinner = new Spinner({});
@@ -55,14 +55,14 @@ var Utils = {
 
            if(success) {
                 spinner.stop();
-                buyButton.firstChild.innerText = 'LES NÅ';
+                buyButton.innerText = 'LES NÅ';
                 window.clearInterval(intervalID);
                 return;
            }
 
            if (++x === repetitions) {
                 spinner.stop();
-                buyButton.firstChild.innerText = 'KJØP NÅ';
+                buyButton.innerText = 'KJØP NÅ';
                 window.clearInterval(intervalID);
            }
         }, delay);
