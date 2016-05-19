@@ -8,16 +8,15 @@
   font-family: "Roboto", helvetica, arial, sans-serif;
   font-weight: 400;
   border-radius: 5px;
-  padding: 5px 10px 5px 65px;
+  padding: 10px 10px 5px 65px;
   text-decoration: none;
   color: #2e2e2e;
   display: block;
-  height: 40px;
-  width: 100px;
+  height: 50px;
+  width: 180px;
 }
 
 .partikkel_buy_button.with_price {
-  width: 110px;
 }
 
 .partikkel_buy_button:hover {

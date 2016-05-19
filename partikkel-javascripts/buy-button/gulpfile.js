@@ -22,7 +22,7 @@ var browserifyTask = function (options, callback) {
     var appBundler = browserify({
         entries: [options.src], // Only need initial file, browserify finds the rest
         standalone: 'partikkel_buy_button',
-        debug: options.development, // Gives us sourcemapping
+        debug: false, // Gives us sourcemapping
         cache: {}, packageCache: {}, fullPaths: true // Requirement of watchify
     });
 

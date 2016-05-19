@@ -16,6 +16,10 @@
   width: 100px;
 }
 
+.partikkel_buy_button.with_price {
+  width: 110px;
+}
+
 .partikkel_buy_button:hover {
   text-decoration: none;
   color: #4aa498;
