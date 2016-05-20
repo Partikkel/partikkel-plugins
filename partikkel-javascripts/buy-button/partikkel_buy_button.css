@@ -29,8 +29,12 @@
   .partikkel_buy_button {
     background-size: 40px 40px;
     font-size: 14px;
-    padding: 6px 5px 3px 50px;
+    padding: 7px 5px 2px 50px;
     height: 32px;
     width: 80px;
+  }
+
+  .partikkel_buy_button.with_price {
+    width: 85px;
   }
 }
