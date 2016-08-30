@@ -20,6 +20,7 @@
     color: #4aa498;
     background-color: white;
     text-align: center;
+     word-wrap: normal;
 }
 
 .partikkel-icon {
@@ -30,14 +31,15 @@
 
 @media screen and (max-width: 600px) {
     .partikkel-floating {
-        width: 35px;
-        height: 60px;
-        font-size: 8px;
+        width: 30px;
+        height: 45px;
+        font-size: 6px;
+        font-weight: 500;
         box-shadow: -2px 2px 2px grey;
     }
     .partikkel-icon {
-        width: 35px;
-        height: 35px;
+        width: 30px;
+        height: 30px;
         margin-top: 3px;
     },
 }

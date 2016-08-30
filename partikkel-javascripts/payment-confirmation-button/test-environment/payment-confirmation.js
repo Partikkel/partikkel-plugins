@@ -3,7 +3,7 @@
         var partikkelDiv = document.getElementById('partikkel-paid');
         
         if(partikkelDiv) {
-            var html = '<div class="partikkel-fixed"><div class="partikkel-floating"><a href="https://test.partikkel.io/minside/"><img src="https://test.partikkel.io/images/logo-invert.svg" class="partikkel-icon" /></a><span>BETALT</span></div></div>';
+            var html = '<div class="partikkel-fixed"><a href="https://test.partikkel.io/minside/"><div class="partikkel-floating"><img src="https://test.partikkel.io/images/logo-invert.svg" class="partikkel-icon" /><span>BETALT</span></div></a></div>';
             partikkelDiv.innerHTML = html;
         }
     }
