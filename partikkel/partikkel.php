@@ -1,10 +1,10 @@
 <?php
 /**
  * Plugin Name: Partikkel
- * Plugin URI: http://www.partikkel.com
- * Description: This plugin adds Partikkel-payment
+ * Plugin URI: https://www.partikkel.io
+ * Description: This plugin enables Partikkel-payment
  * Version: 1.0.0
- * Author: Gaute Smaaland	
+ * Author: Partikkel	
  * Author URI: http://www.partikkel.com
  * License: GPL2
  */
