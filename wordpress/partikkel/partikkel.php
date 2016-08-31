@@ -19,6 +19,7 @@ add_action('init','register_session_if_none');
 add_action('wp','peekTicket');
 add_action( 'init', array( 'Partikkel', 'init' ) );
 
+
 function partikkel_settings_api_init() {
 add_settings_section(
 'partikkel_setting_section',
