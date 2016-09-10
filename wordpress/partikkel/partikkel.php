@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Partikkel
  * Plugin URI: https://www.partikkel.io
- * Description: This plugin enables Partikkel-payment
+ * Description: Partikkel Micropayments makes is super easy to add payment to your site. Use the tag [partikkel] to make your content available to payment. Example: free content  [partikkel] paid content [/partikkel].
  * Version: 1.0.0
  * Author: Partikkel
  * Author URI: http://www.partikkel.com
@@ -27,7 +27,7 @@ add_settings_section(
 'partikkel_setting_callback_function',
 'general'
 );
- 
+
 // Add the field with the names and function to use for our new settings, put it in our new section
 add_settings_field(
 'partikkel_environment',
@@ -36,16 +36,16 @@ add_settings_field(
 'general',
 'partikkel_setting_section'
 );
- 
+
 register_setting( 'general', 'partikkel_environment' );
 }
- 
+
 add_action( 'admin_init', 'partikkel_settings_api_init' );
- 
+
 function partikkel_environment_callback_function() {
 //echo '<p>Test eller produksjon</p>';
 }
- 
+
 function partikkel_setting_callback_function() {
 $setting = esc_attr( get_option( 'partikkel_environment' ) );
 $istest = true;
@@ -72,7 +72,7 @@ function peekTicket(){
 		checkTicket($_GET["partikkel"]);
 		wp_redirect(esc_url( remove_query_arg( 'partikkel' ) ));
 		exit;
-	} 
+	}
 }
 
 function checkTicket($ticket)
