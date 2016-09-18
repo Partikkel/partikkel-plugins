@@ -1,0 +1,15 @@
+{% import "_includes/forms" as forms %}
+{{ forms.selectField({
+        label: "Current environment"|t,
+        instructions: "Set environment for Partikkel integration"|t,
+        id: 'environment',
+        name: 'environment',
+        'options': {
+            '' : 'Select',
+            test : 'test',
+            production : 'production',
+        },
+        value: settings.environment,
+        errors: settings.getErrors('environment')
+    })
+}}
