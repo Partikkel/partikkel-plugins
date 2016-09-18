@@ -62,7 +62,7 @@ class PartikkelPlugin extends BasePlugin
 
     function getDocumentationUrl()
     {
-        return "https://partikkel.wordpress.com/";
+        return "https://partikkel.wordpress.com/2016/09/18/na-er-ogsa-craft-cms-plugin-tilgjengelig-beta/";
     }
 
     function getDeveloper()
