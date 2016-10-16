@@ -12,10 +12,14 @@ define( 'PARTIKKEL__MINIMUM_WP_VERSION', '4.0' );
 define( 'PARTIKKEL__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 
 use \Firebase\JWT\JWT;
+
+if( !session_id() )
+	session_start();
+
 require_once (PARTIKKEL__PLUGIN_DIR.'includes/vendor/autoload.php');
 require_once( PARTIKKEL__PLUGIN_DIR . 'class.partikkel.php' );
 
-add_action('init','register_session_if_none');
+//add_action('init','register_session_if_none');
 add_action('wp','peekTicket');
 add_action( 'init', array( 'Partikkel', 'init' ) );
 
@@ -89,14 +93,35 @@ function checkTicket($ticket)
 	catch (Exception $e) {
 		error_log('Caught exception: '.  $e->getMessage(). "\n",0);
 	}
-	if(!empty($decoded)){
-		$_SESSION['paid'.get_the_ID()] = 1;
-	}
+		if (array_key_exists("timepass",$decoded))
+		{
+				//Timepass, but is it still valid
+	            $tpexpiry=$decoded->timepassexpires/1000;
+	            $seconds_remaining=$tpexpiry - time();
+	            //drupal_set_message("We have a timepass, remaining: " . $seconds_remaining);
+				if($seconds_remaining > 0){ // still valid, mark session good
+					$_SESSION['partikkeltp'] = $tpexpiry;
+				}
+		} else 
+		{
+			$parsed = wp_parse_url($decoded->url)['path'];
+			$path_only = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+			error_log('parsed: ' . $parsed, 3, "/tmp/my-errors.log");
+			error_log('path: ' . $path_only, 3, "/tmp/my-errors.log");
+			error_log(strpos($parsed, $path_only) , 3, "/tmp/my-errors.log");
+			$compare = strpos($parsed, $path_only);
+			if ($compare!=0)//verify valid for path
+				return;
+			if(!empty($decoded))
+			{
+				$_SESSION['paid'.get_the_ID()] = 1;
+			}
+		}
 }
+
 
 if ( is_admin() ) {
   require_once( PARTIKKEL__PLUGIN_DIR . 'class.partikkel-admin.php' );
   add_action( 'init', array( 'Partikkel_Admin', 'init' ) );
 }
-
 ?>

@@ -20,6 +20,10 @@ class Partikkel {
 
   public static function partikkel_shortcode($atts, $content = null) {
     $p = !empty( $_SESSION['paid'.get_the_ID()] ) ? $_SESSION['paid'.get_the_ID()] : false;
+    if(isset($_SESSION['partikkeltp']) && ($_SESSION['partikkeltp'] - time()>0))
+    {
+      $p=true;
+    }
     if ($p) {
       return do_shortcode( $content . '<div id="partikkel-paid"/>' );
     }
