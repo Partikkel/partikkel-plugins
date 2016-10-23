@@ -10,7 +10,7 @@ function partikkel_init() {
 	if ( empty($node) ) {
 		return;
 	}
-	price_check($node->nid);
+	//price_check($node->nid);
 	if(!empty($_GET["partikkel"])){
 		 checkTicketAndMarkPagePaid($_GET["partikkel"],$node->nid);
 		 stripReqParamAndRedirectToSame();
@@ -30,14 +30,27 @@ function checkTicketAndMarkPagePaid($ticket,$nid)
 	$public_key = openssl_pkey_get_public($public_key_file);
 	try{
 		$decoded = JWT::decode($jwt, $public_key, array('RS256'));//verify ticket
-		drupal_set_message(print_r($decoded, true));
+		//drupal_set_message(print_r($decoded, true));
 		if (array_key_exists("timepass",$decoded)){
-			echo "Hello world!<br>";
+			//Timepass, but is it still valid
+            $tpexpiry=$decoded->timepassexpires/1000;
+            $puid=$decoded->sub;
+            $_SESSION['partikkeluser'] = $puid;
+            $seconds_remaining=$tpexpiry - time();
+            //drupal_set_message("We have a timepass, remaining: " . $seconds_remaining);
+            watchdog('partikkel', 'We have a timepass, remaining: ' . $seconds_remaining . ' for user ' . $puid. ' time is ' . time(). ' tpexpiry is ' . $tpexpiry);
+			if($seconds_remaining > 0){ // still valid, mark session good
+				$_SESSION['partikkeltp'] = $tpexpiry;
+			} else {
+				$_SESSION['partikkeltp'] = null;
+				return;
+			}
+		} else { //This is an article
+			$parsed = drupal_parse_url($decoded->url)['path'];
+			//drupal_set_message($parsed.'  '.request_path());
+			if (!strpos($parsed, request_path()) !== false)//verify valid for path
+				return;
 		}
-		//$parsed = drupal_parse_url($decoded->url)['path'];
-		//drupal_set_message($parsed.'  '.request_path());
-		//if (!strpos($parsed, request_path()) !== false)//verify valid for path
-		//	return;
 	}
 	catch (Exception $e) {
 	    watchdog('partikkel', 'failed decoding ticket: ' . $e->getMessage());

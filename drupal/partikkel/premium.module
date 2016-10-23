@@ -406,8 +406,12 @@ function premium_user_content_access($node, $account = NULL) {
         $node=menu_get_object();
     if($node!=null && isset($_SESSION['paid-'.$node->nid]) && $_SESSION['paid-'.$node->nid]==1)
       return TRUE;
-    if(isset($_SESSION['partikkeltp']) && ($_SESSION['partikkeltp'] - time()>0))
+    if(isset($_SESSION['partikkeltp']) && ($_SESSION['partikkeltp'] - time()>0)){
+      $remainingtpseconds = $_SESSION['partikkeltp'] - time();
+      $puid= $_SESSION['partikkeluser'];
+      watchdog('partikkel', 'Letting in partikkel user ' . $puid . ' , remaining seconds: ' . $remainingtpseconds . ' time is ' . time() . ' tpexpiry is ' . $_SESSION['partikkeltp']);
       return TRUE;
+    }
     // We have no protection against people deleting premium levels while
     // nodes are still using them.
     // So it might be that we cannot find the level, in which case we deny
