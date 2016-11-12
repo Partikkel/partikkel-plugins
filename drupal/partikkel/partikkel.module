@@ -10,12 +10,48 @@ function partikkel_init() {
 	if ( empty($node) ) {
 		return;
 	}
-	//price_check($node->nid);
+
 	if(!empty($_GET["partikkel"])){
+		watchdog('partikkel','we have a ticket');
 		 checkTicketAndMarkPagePaid($_GET["partikkel"],$node->nid);
 		 stripReqParamAndRedirectToSame();
 	}
 }
+
+/**premium hook*/
+function partikkel_premium_access(&$node, $teaser) {
+ watchdog('partikkel','partikkel called from hook');
+
+  if ($teaser) {
+    return NULL;
+  }
+
+  if ( empty($node->premium_access) ) {
+    $node->premium_access = FALSE;
+  }
+
+  if ( !$node->premium_access ) {
+    return partikkel_check_access($node) ? TRUE : NULL;
+  }
+  return NULL;
+}
+
+function partikkel_check_access ($node) {
+	$article_access = ($node!=null && isset($_SESSION['paid-'.$node->nid]) && $_SESSION['paid-'.$node->nid]==1);
+    $timepass_access = isset($_SESSION['partikkeltp']) && ($_SESSION['partikkeltp'] - time()>0);
+	
+	if($timepass_access){
+      $remainingtpseconds = $_SESSION['partikkeltp'] - time();
+      watchdog('partikkel', 'Letting in partikkel user ' . $_SESSION['partikkeluser'] . ' , remaining seconds: ' . $remainingtpseconds . ' time is ' . time() . ' tpexpiry is ' . $_SESSION['partikkeltp']);
+    }
+
+	if($article_access){
+      watchdog('partikkel', 'Letting in partikkel user ' . $_SESSION['partikkeluser']);
+    }
+    return $article_access || $timepass_access;
+}
+
+
 
 function stripReqParamAndRedirectToSame(){
 	unset($_GET['partikkel']); // delete partikkel-parameter for aa bevare clean urls
@@ -30,12 +66,11 @@ function checkTicketAndMarkPagePaid($ticket,$nid)
 	$public_key = openssl_pkey_get_public($public_key_file);
 	try{
 		$decoded = JWT::decode($jwt, $public_key, array('RS256'));//verify ticket
-		//drupal_set_message(print_r($decoded, true));
+		$puid=$decoded->sub;
+        $_SESSION['partikkeluser'] = $puid;
 		if (array_key_exists("timepass",$decoded)){
 			//Timepass, but is it still valid
             $tpexpiry=$decoded->timepassexpires/1000;
-            $puid=$decoded->sub;
-            $_SESSION['partikkeluser'] = $puid;
             $seconds_remaining=$tpexpiry - time();
             //drupal_set_message("We have a timepass, remaining: " . $seconds_remaining);
             watchdog('partikkel', 'We have a timepass, remaining: ' . $seconds_remaining . ' for user ' . $puid. ' time is ' . time(). ' tpexpiry is ' . $tpexpiry);
@@ -60,15 +95,3 @@ function checkTicketAndMarkPagePaid($ticket,$nid)
 	}
 }
 
-function price_check($nid) {
-	$checked= !empty( $_SESSION['checked'.$nid] ) ? $_SESSION['checked'.$nid] : false;
-	if(!$checked){
-		$protocol = stripos($_SERVER['SERVER_PROTOCOL'],'https') === true ? 'https://' : 'http://';
-		$currenturl=$protocol . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-		$queryurl='https://test.partikkel.io/api/open/article/url?url='.$currenturl;
-		$json = file_get_contents($queryurl);
-		$data = json_decode($json);
-		$price = $data->{'price'};
-		$_SESSION['checked-'.$nid] = $price;
-	}
-}
