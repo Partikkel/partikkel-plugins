@@ -20,8 +20,6 @@ function partikkel_init() {
 
 /**premium hook*/
 function partikkel_premium_access(&$node, $teaser) {
- watchdog('partikkel','partikkel called from hook');
-
   if ($teaser) {
     return NULL;
   }
@@ -38,7 +36,10 @@ function partikkel_premium_access(&$node, $teaser) {
 
 function partikkel_check_access ($node) {
 	$article_access = ($node!=null && isset($_SESSION['paid-'.$node->nid]) && $_SESSION['paid-'.$node->nid]==1);
+    
+/*
     $timepass_access = isset($_SESSION['partikkeltp']) && ($_SESSION['partikkeltp'] - time()>0);
+	
 	
 	if($timepass_access){
       $remainingtpseconds = $_SESSION['partikkeltp'] - time();
@@ -48,10 +49,23 @@ function partikkel_check_access ($node) {
 	if($article_access){
       watchdog('partikkel', 'Letting in partikkel user ' . $_SESSION['partikkeluser']);
     }
-    return $article_access || $timepass_access;
+*/
+    return $article_access || is_timepass();
 }
 
+function is_timepass() {
+  return isset($_SESSION['partikkeltp']) && ($_SESSION['partikkeltp'] - time()>0);
+}
 
+function partikkel_node_view($node, $view_mode, $langcode) {
+	if($view_mode == 'full' AND partikkel_check_access($node)) {
+		if(is_timepass()){
+			$node->content['body'][0]['#markup'] .= '<div id="partikkel-timepass"></div>';
+		} else {
+			$node->content['body'][0]['#markup'] .= '<div id="partikkel-paid"></div>';
+		}
+	}
+}
 
 function stripReqParamAndRedirectToSame(){
 	unset($_GET['partikkel']); // delete partikkel-parameter for aa bevare clean urls
