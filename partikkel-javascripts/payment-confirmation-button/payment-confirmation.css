@@ -5,7 +5,8 @@
     z-index: 10001;
 }
 
-.partikkel-floating {
+.partikkel-floating,
+.partikkel-floating-timepass {
     width: 50px;
     height: 80px;
     line-height: 100%;
@@ -38,12 +39,20 @@
 }
 
 @media screen and (max-width: 600px) {
-    .partikkel-floating {
+    .partikkel-floating,
+    .partikkel-floating-timepass {
         width: 30px;
-        height: 45px;
         font-size: 6px;
         font-weight: 500;
         box-shadow: -2px 2px 2px grey;
+    }
+
+    .partikkel-floating {        
+        height: 45px;        
+    }
+
+    .partikkel-floating-timepass {        
+        height: 48px;        
     }
 
     .partikkel-icon {
