@@ -1,7 +1,10 @@
 package no.partikkel.examples;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.StringUtils;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
@@ -17,6 +20,7 @@ import java.security.PublicKey;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.util.Date;
 
 /**
  * Created by gaute on 28.11.16.
@@ -54,8 +58,12 @@ public class ExampleServlet extends HttpServlet
             e.printStackTrace(); //log4j is better
             return false;
         }
-        assert Jwts.parser().setSigningKey(publicKey).parseClaimsJws(compactJws).getBody().getSubject().equals("partikkel.io");
-        //obs: try/catch over sikkert lurt. Og sjekk path, som ligger i claim "url". Og expiry hvis ikke jjwt gjør det (ikke alle libs gjør det)
+        final Jws<Claims> claims = Jwts.parser().setSigningKey(publicKey).parseClaimsJws(compactJws);
+        final Claims claimsBody = claims.getBody();
+        String surl = claimsBody.get("url",String.class);
+        if(!"partikkel.io".equals(claimsBody.getIssuer()))return false;
+        if(!new Date().before(claimsBody.getExpiration()))return false;
+        if(surl.indexOf(path)<0)return false; //check article paid for is this one  - and log these errors maybe..
         return true;
     }
 
