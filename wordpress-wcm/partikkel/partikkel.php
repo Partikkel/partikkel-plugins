@@ -3,7 +3,7 @@
  * Plugin Name: Partikkel
  * Plugin URI: https://www.partikkel.io
  * Description: Partikkel Micropayments makes is super easy to add payment to your site. Use the tag [partikkel] to make your content available to payment. Example: free content  [partikkel] paid content [/partikkel].
- * Version: 1.0.0
+ * Version: 0.9-wcm
  * Author: Partikkel
  * Author URI: http://www.partikkel.com
  * License: GPL2
