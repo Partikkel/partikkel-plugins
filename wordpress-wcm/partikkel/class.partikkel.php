@@ -16,7 +16,7 @@ class Partikkel {
     self::$initiated = true;
     add_shortcode( 'partikkel', array( 'Partikkel', 'partikkel_shortcode' ));
     add_shortcode( 'p_wcm_nonmember', array( 'Partikkel', 'p_wcm_nonmember_shortcode' ));
-    add_shortcode( 'p_wcm_restricted', array( 'Partikkel', 'p_wcm_restricted_shortcode' ));
+    add_shortcode( 'p_wcm_restrict', array( 'Partikkel', 'p_wcm_restricted_shortcode' ));
       
       
     add_action( 'wp_enqueue_scripts', array( 'Partikkel', 'enqueuePartikkelStyleAndScript' ) );
@@ -81,11 +81,16 @@ class Partikkel {
         
         $partikkel_access = !empty( $_SESSION['paid'.get_the_ID()] ) ? $_SESSION['paid'.get_the_ID()] : false;
 		
+        if($partikkel_access){
+            return do_shortcode( $content . '<div id="partikkel-paid"/>');
+        } 
+                                
         // Get the restricted post
 		$post_id = isset( $_GET['r'] ) ? absint( $_GET['r'] ) : null;
 
 		// Skip if post ID not provided
 		if ( ! $post_id ) {
+            //$post_id=get_the_ID();
 			return '';
 		}
 
@@ -134,10 +139,6 @@ class Partikkel {
 
 			}
 		}
-        
-        if($partikkel_access){
-        $output .= '<div class="wc-memberships-content-restricted-message">' . wc_memberships()->get_frontend_instance()->get_content_restricted_message( $post->ID ) . '</div>' . '<div id="partikkel-paid"/>';
-        } 
 
 		return $output;
 	}    
