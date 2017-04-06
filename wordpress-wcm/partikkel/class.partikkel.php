@@ -84,63 +84,7 @@ class Partikkel {
         if($partikkel_access){
             return do_shortcode( $content . '<div id="partikkel-paid"/>');
         } 
-                                
-        // Get the restricted post
-		$post_id = isset( $_GET['r'] ) ? absint( $_GET['r'] ) : null;
-
-		// Skip if post ID not provided
-		if ( ! $post_id ) {
-            //$post_id=get_the_ID();
-			return '';
-		}
-
-		$post = get_post( $post_id );
-
-		// Skip if post was not found
-		if ( ! $post ) {
-			return '';
-		}
-
-		$output = '';
-
-		// Special handling for products
-		if ( in_array( get_post_type( $post_id ), array( 'product', 'product_variation' ), true ) ) {
-
-			if ( 'yes' === get_option( 'wc_memberships_show_excerpts' ) ) {
-				$output = apply_filters( 'woocommerce_short_description', $post->post_excerpt );
-			}
-
-			// Check if user has access to viewing restricted content
-			if ( ! current_user_can( 'wc_memberships_view_restricted_product', $post->ID ) ) {
-				$output .= '<div class="wc-memberships-content-restricted-message">' . wc_memberships()->get_frontend_instance()->get_product_viewing_restricted_message( $post->ID ) . '</div>';
-			}
-
-			// Check if user has access to delayed content
-			else if ( ! current_user_can( 'wc_memberships_view_delayed_post_content', $post->ID ) ) {
-				$output .= '<div class="wc-memberships-content-delayed-message">' . wc_memberships()->get_frontend_instance()->get_content_delayed_message( get_current_user_id(), $post->ID, 'view' ) . '</div>';
-			}
-
-		// All other content
-		} else {
-
-			if ( 'yes' === get_option( 'wc_memberships_show_excerpts' ) ) {
-				$output = apply_filters( 'get_the_excerpt', $post->post_excerpt );
-			}
-
-			// Check if user has access to restricted content
-			if ( ! current_user_can( 'wc_memberships_view_restricted_post_content', $post->ID ) ) {
-
-				$output .= '<div class="wc-memberships-content-restricted-message">' . wc_memberships()->get_frontend_instance()->get_content_restricted_message( $post->ID ) . '</div>';
-
-			// Check if user has access to delayed content
-			} elseif ( ! current_user_can( 'wc_memberships_view_delayed_post_content', $post->ID ) ) {
-
-				$output .= '<div class="wc-memberships-content-delayed-message">' . wc_memberships()->get_frontend_instance()->get_content_delayed_message( get_current_user_id(), $post->ID ) . '</div>';
-
-			}
-		}
-
-		return $output;
+		return restrict($attrs,$content);
 	}    
     
     
