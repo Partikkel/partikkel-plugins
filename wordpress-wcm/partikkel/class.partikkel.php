@@ -17,7 +17,7 @@ class Partikkel {
     add_shortcode( 'partikkel', array( 'Partikkel', 'partikkel_shortcode' ));
     add_shortcode( 'p_wcm_nonmember', array( 'Partikkel', 'p_wcm_nonmember_shortcode' ));
     add_shortcode( 'p_wcm_restrict', array( 'Partikkel', 'p_wcm_restricted_shortcode' ));
-      
+    add_shortcode( 'partikkel_buy_url', array( 'Partikkel', 'partikkel_buy_url' ));
       
     add_action( 'wp_enqueue_scripts', array( 'Partikkel', 'enqueuePartikkelStyleAndScript' ) );
   }
@@ -30,6 +30,15 @@ class Partikkel {
     return '<p><div id="partikkel-button-wrapper"/></p>';
   }
 
+    
+  public static function partikkel_buy_url($atts, $content = null) {
+    global $wp;
+    $current_url = add_query_arg( $wp->query_string, '', home_url( $wp->request ) );
+    return self::pHost() . '/particket/access?url=' . $current_url;
+  }
+
+    
+    
     /**
      * WooCommerce Membership-integration: Nonmember content shortcode
      *
@@ -84,7 +93,7 @@ class Partikkel {
         if($partikkel_access){
             return do_shortcode( $content . '<div id="partikkel-paid"/>');
         } 
-		return restrict($attrs,$content);
+	   return WC_Memberships_Shortcodes::restrict($attrs,$content);
 	}    
     
     
