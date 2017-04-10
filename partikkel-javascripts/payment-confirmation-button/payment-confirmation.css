@@ -5,6 +5,10 @@
     z-index: 10001;
 }
 
+.partikkel-fixed a {
+    text-decoration: none !important;
+}
+
 .partikkel-floating,
 .partikkel-floating-timepass {
     width: 50px;
