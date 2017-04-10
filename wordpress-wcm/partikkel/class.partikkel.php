@@ -93,7 +93,7 @@ class Partikkel {
         if($partikkel_access){
             return do_shortcode( $content . '<div id="partikkel-paid"/>');
         } 
-	   return WC_Memberships_Shortcodes::restrict($attrs,$content);
+	   return WC_Memberships_Shortcodes::restrict($atts,$content);
 	}    
     
     
