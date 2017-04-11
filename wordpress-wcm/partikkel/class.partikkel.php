@@ -23,6 +23,11 @@ class Partikkel {
   }
 
   public static function partikkel_shortcode($atts, $content = null) {
+    
+    if( !session_id() ){
+        session_start();
+    }
+      
     $p = !empty( $_SESSION['paid'.get_the_ID()] ) ? $_SESSION['paid'.get_the_ID()] : false;
     if ($p) {
       return do_shortcode( $content . '<div id="partikkel-paid"/>' );
@@ -30,7 +35,6 @@ class Partikkel {
     return '<p><div id="partikkel-button-wrapper"/></p>';
   }
 
-    
   public static function partikkel_buy_url($atts, $content = null) {
     global $wp;
     $current_url = add_query_arg( $wp->query_string, '', home_url( $wp->request ) );
@@ -50,6 +54,9 @@ class Partikkel {
      * @return string Shortcode result
      */
     public static function p_wcm_nonmember_shortcode( $atts, $content = null ) {
+        if( !session_id() ){
+        session_start();
+        }
 
         $partikkel_access = !empty( $_SESSION['paid'.get_the_ID()] ) ? $_SESSION['paid'.get_the_ID()] : false;
 
@@ -87,7 +94,10 @@ class Partikkel {
 	 * @return string Shortcode result
 	 */
 	public static function p_wcm_restricted_shortcode( $atts, $content = null ) {
-        
+        if( !session_id() ){
+            session_start();
+        }
+    
         $partikkel_access = !empty( $_SESSION['paid'.get_the_ID()] ) ? $_SESSION['paid'.get_the_ID()] : false;
 		
         error_log('Checking access to article ' . get_the_ID() , 0);
