@@ -90,10 +90,11 @@ class Partikkel {
         
         $partikkel_access = !empty( $_SESSION['paid'.get_the_ID()] ) ? $_SESSION['paid'.get_the_ID()] : false;
 		
+        error_log('Checking access to article ' . get_the_ID() , 0);
         error_log('Checking access.. User has access: ' . $partikkel_access , 0);
         
         if($partikkel_access){
-            error_log('Ok, user has access: ', 0);
+            error_log('Ok, user has access', 0);
             return do_shortcode( $content . '<div id="partikkel-paid"/>');
         } else {
             error_log('User denied access to article: ' . get_the_ID(), 0);
