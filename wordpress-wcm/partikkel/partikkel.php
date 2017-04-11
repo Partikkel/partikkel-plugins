@@ -3,7 +3,7 @@
  * Plugin Name: Partikkel
  * Plugin URI: https://www.partikkel.io
  * Description: Partikkel Micropayments makes it super easy to add payment to your site. Use the tag [partikkel] to make your content available to payment. Example: free content  [partikkel] paid content [/partikkel].
- * Version: 0.9-wcm
+ * Version: 0.9.1-wcm
  * Author: Partikkel
  * Author URI: http://www.partikkel.com
  * License: GPL2
@@ -88,7 +88,9 @@ function checkTicket($ticket)
 	$jwt = base64_decode($ticket);
 	$public_key = openssl_pkey_get_public(file_get_contents(PARTIKKEL__PLUGIN_DIR .$cert));
 	try{
+        error_log('trying to decode jwt', 0);
 		$decoded = JWT::decode($jwt, $public_key, array('RS256'));
+        error_log('decoded jwt ok', 0);
 	}
 	catch (Exception $e) {
 		error_log('Caught exception: '.  $e->getMessage(). "\n",0);
@@ -104,16 +106,22 @@ function checkTicket($ticket)
 				}
 		} else 
 		{
+            error_log('checking if article paid for is the one accessed', 0);
 			$parsed = wp_parse_url($decoded->url)['path'];
 			$path_only = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-			error_log('parsed: ' . $parsed, 3, "/tmp/my-errors.log");
-			error_log('path: ' . $path_only, 3, "/tmp/my-errors.log");
-			error_log(strpos($parsed, $path_only) , 3, "/tmp/my-errors.log");
+			error_log('parsed: ' . $parsed, 0);
+			error_log('path: ' . $path_only, 0);
+			error_log('compared: ' . strpos($parsed, $path_only) , 0);
 			$compare = strpos($parsed, $path_only);
-			if ($compare!=0)//verify valid for path
+			if ($compare!=0)
+            {
+                error_log('jwt not valid for path', 0);
 				return;
+            }
+            error_log('jwt valid for path', 0);
 			if(!empty($decoded))
 			{
+                error_log('marking paid on session, articleid: ' . get_the_ID(), 0);
 				$_SESSION['paid'.get_the_ID()] = 1;
 			}
 		}

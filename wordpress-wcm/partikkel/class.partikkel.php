@@ -90,9 +90,19 @@ class Partikkel {
         
         $partikkel_access = !empty( $_SESSION['paid'.get_the_ID()] ) ? $_SESSION['paid'.get_the_ID()] : false;
 		
+        error_log('Checking access.. User has access: ' . $partikkel_access , 0);
+        
         if($partikkel_access){
+            error_log('Ok, user has access: ', 0);
             return do_shortcode( $content . '<div id="partikkel-paid"/>');
-        } 
+        } else {
+            error_log('User denied access to article: ' . get_the_ID(), 0);
+        }
+        if ( class_exists( 'WC_Memberships_Shortcodes' ) ) {
+        error_log('Checking compatibility... OK! WC_Memberships_Shortcodes available. ', 0);
+        } else {
+        error_log('Partikkel-Error: WC_Memberships_Shortcodes not available, install WooCommerce Membership to continue ', 0);
+        }
 	   return WC_Memberships_Shortcodes::restrict($atts,$content);
 	}    
     
