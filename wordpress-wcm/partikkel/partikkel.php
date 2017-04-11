@@ -13,15 +13,17 @@ define( 'PARTIKKEL__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 
 use \Firebase\JWT\JWT;
 
-if( !session_id() )
-	session_start();
+//if( !session_id() )
+//	session_start();
 
 require_once (PARTIKKEL__PLUGIN_DIR.'includes/vendor/autoload.php');
 require_once( PARTIKKEL__PLUGIN_DIR . 'class.partikkel.php' );
 
-//add_action('init','register_session_if_none');
+add_action('init','register_session_if_none');
 add_action('wp','peekTicket');
 add_action( 'init', array( 'Partikkel', 'init' ) );
+add_action('wp_logout', 'myEndSession');
+add_action('wp_login', 'myEndSession');
 
 
 function partikkel_settings_api_init() {
@@ -69,6 +71,10 @@ echo '
 function register_session_if_none(){
 	if( !session_id() )
 		session_start();
+}
+
+function myEndSession() {
+    session_destroy ();
 }
 
 function peekTicket(){
